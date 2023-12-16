@@ -1,10 +1,9 @@
 import numpy as np
-
 class DatasetGenerator:
     def __init__(self, dim_of_space, dim_of_manifold):
         self.dim_of_space = dim_of_space
         self.dim_of_manifold = dim_of_manifold
-    
+
     def generate_dataset_in_subspace(self, n_samples):
         """
         Generate a dataset that lies along a low-dimensional subspace within a high-dimensional space.
@@ -26,8 +25,8 @@ class DatasetGenerator:
         dataset = np.dot(coefficients, basis.T)
 
         return dataset
-    
-    def generate_lines_planes(self, n_samples):
+
+    def generate_lines_planes(self, n_samples, scale, noise):
         """
         Generate a dataset of straight lines in either a 2D plane or 3D space.
 
@@ -52,20 +51,22 @@ class DatasetGenerator:
                 p_0, p_1, p_2, x_0, y_0, z_0 = np.random.rand(6)
 
         for i in range(n_samples):
+            eps = noise * np.random.normal()
             # Generate random parameters for the line
             if self.dim_of_space == 2:
-                x = np.random.rand()
-                y = k * x + b
+                x = scale * np.random.rand()
+                y = k * x + b + eps
                 dataset[i] = [x, y]
             else:
                 if self.dim_of_manifold == 2:
-                    x = np.random.rand(self.dim_of_space - 1)
-                    y = a * x[0] + b * x[1] + c
+                    x = scale * np.random.rand(self.dim_of_space - 1)
+                    y = a * x[0] + b * x[1] + c + eps
                     dataset[i] = [x[0], x[1], y]
                 if self.dim_of_manifold == 1:
-                    t = np.random.rand()
-                    x = x_0 + p_0 * t
-                    y = y_0 + p_1 * t
-                    z = z_0 + p_2 * t
+
+                    t = scale * np.random.rand()
+                    x = x_0 + p_0 * t + noise * np.random.normal() 
+                    y = y_0 + p_1 * t + noise * np.random.normal() 
+                    z = z_0 + p_2 * t + noise * np.random.normal() 
                     dataset[i] = [x, y, z]
         return dataset
