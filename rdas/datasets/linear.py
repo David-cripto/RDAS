@@ -2,13 +2,14 @@ import numpy as np
 from torchvision import transforms
 from torch.utils.data import Dataset
 from pathlib import Path
+import torch
 
 PathLike = Path | str
-
+NUM_LIN_SAMPLES = 10**9
 TRANSFORM = transforms.Compose(
     [
-        transforms.ToTensor(),
-        transforms.Normalize([0.5], [0.5]),
+        transforms.Lambda(lambda x: torch.tensor(x, dtype = torch.float32)),
+        transforms.Lambda(lambda x: x * 2 - 1),
     ]
 )
 
@@ -81,9 +82,20 @@ class DatasetGenerator:
                     z = z_0 + p_2 * t
                     dataset[i] = [x, y, z]
         return dataset
+
+
+class TorchLinDataset(Dataset):
+    def __init__(self, **kwargs) -> None:
+        super().__init__()
+        self.line_generator = DatasetGenerator(**kwargs).generate_lines_planes(NUM_LIN_SAMPLES)
+        self.transform=TRANSFORM
+
+    def __len__(self):
+        return len(self.line_generator)
+    def __getitem__(self, index):
+        return self.transform(self.line_generator[index])
     
 
+
 def get_dataset(**kwargs) -> tuple[Dataset, ...]:
-    line_generator = DatasetGenerator(**kwargs)
-    train_dataset = Dataset(line_generator, transform=TRANSFORM)
-    return train_dataset
+    return TorchLinDataset(**kwargs)

@@ -13,19 +13,20 @@ DEVICE = "cuda"
 LR = 1e-4
 N_EPOCHS = 10**3
 BATCH_SIZE = 128
-
+DIM_OF_SPACE = 3
+DIM_OF_MANIFOLD = 2
 
 def main():
     sde = VESDE()
     marginal_prob_std = lambda t: sde.marginal_prob(None, t)[1]
 
-    model = ScoreNet(marginal_prob_std=marginal_prob_std)
+    model = ScoreNet(marginal_prob_std=marginal_prob_std, in_dim=DIM_OF_SPACE)
     model.to(DEVICE)
     model.train()
 
     optimizer = Adam(model.parameters(), lr=LR)
 
-    train_dataset = get_dataset()
+    train_dataset = get_dataset(dim_of_space = DIM_OF_SPACE, dim_of_manifold = DIM_OF_MANIFOLD)
     data_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, num_workers=4)
     loss_history = []
 
@@ -40,7 +41,7 @@ def main():
     for epoch in tqdm_epoch:
         avg_loss = 0.
         num_items = 0
-        for x, y in data_loader:
+        for x in data_loader:
             x = x.to(DEVICE)    
             loss = loss_fn(sde, model, x)
             loss.backward()    

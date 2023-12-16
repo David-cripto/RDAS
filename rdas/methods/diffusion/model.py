@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+import numpy as np
 
 class GaussianFourierProjection(nn.Module):
     """Gaussian random features for encoding time steps."""  
