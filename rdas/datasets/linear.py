@@ -1,4 +1,16 @@
 import numpy as np
+from torchvision import transforms
+from torch.utils.data import Dataset
+from pathlib import Path
+
+PathLike = Path | str
+
+TRANSFORM = transforms.Compose(
+    [
+        transforms.ToTensor(),
+        transforms.Normalize([0.5], [0.5]),
+    ]
+)
 
 class DatasetGenerator:
     def __init__(self, dim_of_space, dim_of_manifold):
@@ -69,3 +81,9 @@ class DatasetGenerator:
                     z = z_0 + p_2 * t
                     dataset[i] = [x, y, z]
         return dataset
+    
+
+def get_dataset(**kwargs) -> tuple[Dataset, ...]:
+    line_generator = DatasetGenerator(**kwargs)
+    train_dataset = Dataset(line_generator, transform=TRANSFORM)
+    return train_dataset
