@@ -1,22 +1,23 @@
 import numpy as np
-import random
+import torch
 from torchvision import transforms
 from torch.utils.data import Dataset
 from pathlib import Path
-import torch
+
 
 PathLike = Path | str
-NUM_LIN_SAMPLES = 10**4
+
 TRANSFORM = transforms.Compose(
     [
         transforms.Lambda(lambda x: torch.tensor(x, dtype = torch.float32))
     ]
 )
 
-class DatasetGenerator:
+class DatasetGenerator():
     def __init__(self, dim_of_space, dim_of_manifold):
         self.dim_of_space = dim_of_space
         self.dim_of_manifold = dim_of_manifold
+
 
     def generate_dataset_in_subspace(self, n_samples, seed_value=42):
         """
@@ -31,13 +32,11 @@ class DatasetGenerator:
         - dataset: NumPy array with shape (num_samples, dim_of_space)
         """
         np.random.seed(seed_value)
-        # Generate a random orthonormal basis for the subspace
         basis = np.linalg.qr(np.random.randn(self.dim_of_space, self.dim_of_manifold))[0]
-        # Generate random coefficients for the linear combination
         coefficients = np.random.randn(n_samples, self.dim_of_manifold)
-        # Compute the dataset by projecting random points onto the subspace
         dataset = np.dot(coefficients, basis.T)
         return dataset
+
 
     def generate_lines_planes(self, n_samples, scale, noise, line_params):
         """
@@ -83,17 +82,18 @@ class DatasetGenerator:
       
 
 class TorchLinDataset(Dataset):
-    def __init__(self, **kwargs) -> None:
+    def __init__(self, path) -> None:
         super().__init__()
-        self.line_generator = DatasetGenerator(**kwargs).generate_lines_planes(NUM_LIN_SAMPLES)
+        self.line_generator = np.load(path)
         self.transform=TRANSFORM
 
     def __len__(self):
         return len(self.line_generator)
+
     def __getitem__(self, index):
         return self.transform(self.line_generator[index])
-    
 
 
-def get_dataset(**kwargs) -> tuple[Dataset, ...]:
-    return TorchLinDataset(**kwargs)
+def get_dataset(path) -> tuple[Dataset, ...]:
+    return TorchLinDataset(path)
+
