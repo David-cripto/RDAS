@@ -45,6 +45,6 @@ class TorchSphereDataset(Dataset):
         return self.transform(self.sphere_generator[index])
 
 
-def get_dataset(dataset) -> tuple[Dataset, ...]:
-    return TorchSphereDataset(dataset)
+def get_dataset(path) -> tuple[Dataset, ...]:
+    return TorchSphereDataset(path)
 
