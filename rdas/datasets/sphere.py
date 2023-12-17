@@ -5,6 +5,14 @@ from torch.utils.data import Dataset
 from pathlib import Path
 
 
+PathLike = Path | str
+
+TRANSFORM = transforms.Compose(
+    [
+        transforms.Lambda(lambda x: torch.tensor(x, dtype = torch.float32))
+    ]
+)
+
 class SphericalDataset(Dataset):
     def __init__(self, dim_of_space, dim_of_manifold, seed=42):
         self.n = dim_of_space
@@ -25,12 +33,10 @@ class SphericalDataset(Dataset):
 
 
 class TorchLinDataset(Dataset):
-    def __init__(self, n_samples=10**5, **kwargs) -> None:
+    def __init__(self, dataset) -> None:
         super().__init__()
-        self.line_generator = SphericalDataset(**kwargs).get_sample(n_samples)
-        self.transform = transforms.Compose([
-            transforms.Lambda(tensorize)
-        ])
+        self.line_generator = dataset
+        self.transform=TRANSFORM
 
     def __len__(self):
         return len(self.line_generator)
@@ -39,9 +45,6 @@ class TorchLinDataset(Dataset):
         return self.transform(self.line_generator[index])
 
 
-def tensorize(x):
-    return torch.tensor(x, dtype=torch.float32)
-    
-def get_dataset(**kwargs) -> tuple[Dataset, ...]:
-    return TorchLinDataset(**kwargs)
+def get_dataset(dataset) -> tuple[Dataset, ...]:
+    return TorchLinDataset(dataset)
 
