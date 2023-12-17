@@ -94,6 +94,6 @@ class TorchLinDataset(Dataset):
         return self.transform(self.line_generator[index])
 
 
-def get_dataset(dataset) -> tuple[Dataset, ...]:
-    return TorchLinDataset(dataset)
+def get_dataset(path) -> tuple[Dataset, ...]:
+    return TorchLinDataset(path)
 
