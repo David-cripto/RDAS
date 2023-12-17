@@ -82,9 +82,9 @@ class DatasetGenerator():
       
 
 class TorchLinDataset(Dataset):
-    def __init__(self, dataset) -> None:
+    def __init__(self, path) -> None:
         super().__init__()
-        self.line_generator = dataset
+        self.line_generator = np.load(path)
         self.transform=TRANSFORM
 
     def __len__(self):
