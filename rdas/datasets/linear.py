@@ -8,8 +8,7 @@ PathLike = Path | str
 NUM_LIN_SAMPLES = 10**4
 TRANSFORM = transforms.Compose(
     [
-        transforms.Lambda(lambda x: torch.tensor(x, dtype = torch.float32)),
-        transforms.Lambda(lambda x: x * 2 - 1),
+        transforms.Lambda(lambda x: torch.tensor(x, dtype = torch.float32))
     ]
 )
 
