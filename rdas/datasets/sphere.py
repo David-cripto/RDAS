@@ -13,7 +13,7 @@ TRANSFORM = transforms.Compose(
     ]
 )
 
-class SphericalDataset(Dataset):
+class SphericalDataset():
     def __init__(self, dim_of_space, dim_of_manifold, seed=42):
         self.n = dim_of_space
         self.m = dim_of_manifold
@@ -32,19 +32,19 @@ class SphericalDataset(Dataset):
         return coords
 
 
-class TorchLinDataset(Dataset):
-    def __init__(self, dataset) -> None:
+class TorchSphereDataset(Dataset):
+    def __init__(self, path) -> None:
         super().__init__()
-        self.line_generator = dataset
+        self.sphere_generator = np.load(path)
         self.transform=TRANSFORM
 
     def __len__(self):
-        return len(self.line_generator)
+        return len(self.sphere_generator)
 
     def __getitem__(self, index):
-        return self.transform(self.line_generator[index])
+        return self.transform(self.sphere_generator[index])
 
 
 def get_dataset(dataset) -> tuple[Dataset, ...]:
-    return TorchLinDataset(dataset)
+    return TorchSphereDataset(dataset)
 
