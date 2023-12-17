@@ -5,7 +5,7 @@ from pathlib import Path
 import torch
 
 PathLike = Path | str
-NUM_LIN_SAMPLES = 10**9
+NUM_LIN_SAMPLES = 10**4
 TRANSFORM = transforms.Compose(
     [
         transforms.Lambda(lambda x: torch.tensor(x, dtype = torch.float32)),
