@@ -20,7 +20,7 @@ class PlotterDataset():
 
     @staticmethod
     def plot_2D(sample, title, labels):
-        fig, ax = plt.subplots(figsize=(6, 6))
+        fig, ax = plt.subplots(figsize=(4, 4))
         x, y = sample[:, 0], sample[:, 1]
         ax.scatter(x, y, c='blue', marker='o', label=labels)
         ax.set_xlabel('X-axis')
@@ -32,7 +32,7 @@ class PlotterDataset():
 
     @staticmethod
     def plot_3D(sample, title, labels):
-        fig = plt.figure()
+        fig = plt.figure(figsize=(4, 4))
         ax = fig.add_subplot(111, projection='3d')
         x, y, z = sample[:, 0], sample[:, 1], sample[:, 2]
         ax.scatter(x, y, z, c='blue', marker='o', label=labels)
