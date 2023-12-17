@@ -46,44 +46,6 @@ class Decoder(nn.Module):
     def forward(self, z):
         return self.model(z)
     
-def get_normal_KL(mean_1, log_std_1, mean_2=None, log_std_2=None):
-    """
-        This function should return the value of KL(p1 || p2),
-        where p1 = Normal(mean_1, exp(log_std_1)), p2 = Normal(mean_2, exp(log_std_2) ** 2).
-        If mean_2 and log_std_2 are None values, we will use standard normal distribution.
-        Note that we consider the case of diagonal covariance matrix.
-    """
-    if mean_2 is None:
-        mean_2 = torch.zeros_like(mean_1)
-    if log_std_2 is None:
-        log_std_2 = torch.zeros_like(log_std_1)
-
-    std_1 = torch.exp(log_std_1)
-    std_2 = torch.exp(log_std_2)
-
-    mean_1, mean_2 = mean_1.float(), mean_2.float()
-    std_1, std_2  = std_1.float(), std_2.float()
-
-    p  = Independent(torch.distributions.Normal(mean_1, std_1), 1)
-    q  = Independent(torch.distributions.Normal(mean_2, std_2), 1)
-    kl = torch.distributions.kl_divergence(p, q)
-
-    return kl
-
-
-def get_normal_nll(x, mean, log_std):
-    """
-        This function should return the negative log likelihood log p(x),
-        where p(x) = Normal(x | mean, exp(log_std) ** 2).
-        Note that we consider the case of diagonal covariance matrix.
-    """
-    # ====
-    mean = mean.float()
-    std  = torch.exp(log_std).float()
-
-    prob = Independent(torch.distributions.Normal(mean, std), reinterpreted_batch_ndims = 1)
-    nnl = -prob.log_prob(x)
-    return nnl
 
 class VAE(nn.Module):
     def __init__(self, enc, dec, n_latent, beta=1):
@@ -113,8 +75,8 @@ class VAE(nn.Module):
     def loss(self, x):
 
         mu_z, log_std_z, mu_x = self(x)
-        recon_loss = torch.mean(get_normal_nll(x, mu_x, torch.zeros_like(mu_x)))
-        kl_loss = torch.mean(get_normal_KL(mu_z, log_std_z, torch.zeros_like(mu_z), torch.zeros_like(log_std_z)))
+        recon_loss = torch.mean(self.get_normal_nll(x, mu_x, torch.zeros_like(mu_x)))
+        kl_loss = torch.mean(self.get_normal_KL(mu_z, log_std_z, torch.zeros_like(mu_z), torch.zeros_like(log_std_z)))
         elbo_loss = self.beta * kl_loss + recon_loss
         dict_loss = {"recon_loss": recon_loss, "kl_loss":kl_loss, "elbo_loss":elbo_loss}
         return dict_loss
@@ -123,6 +85,44 @@ class VAE(nn.Module):
         with torch.no_grad():
 
             x_recon = self.decoder(self.prior(n))
-            # samples = torch.clamp(x_recon, -1, 1)
 
         return x_recon.cpu().numpy()
+    
+    def get_normal_KL(self, mean_1, log_std_1, mean_2=None, log_std_2=None):
+        """
+            This function should return the value of KL(p1 || p2),
+            where p1 = Normal(mean_1, exp(log_std_1)), p2 = Normal(mean_2, exp(log_std_2) ** 2).
+            If mean_2 and log_std_2 are None values, we will use standard normal distribution.
+            Note that we consider the case of diagonal covariance matrix.
+        """
+        if mean_2 is None:
+            mean_2 = torch.zeros_like(mean_1)
+        if log_std_2 is None:
+            log_std_2 = torch.zeros_like(log_std_1)
+
+        std_1 = torch.exp(log_std_1)
+        std_2 = torch.exp(log_std_2)
+
+        mean_1, mean_2 = mean_1.float(), mean_2.float()
+        std_1, std_2  = std_1.float(), std_2.float()
+
+        p  = Independent(torch.distributions.Normal(mean_1, std_1), 1)
+        q  = Independent(torch.distributions.Normal(mean_2, std_2), 1)
+        kl = torch.distributions.kl_divergence(p, q)
+
+        return kl
+
+
+    def get_normal_nll(self, x, mean, log_std):
+        """
+            This function should return the negative log likelihood log p(x),
+            where p(x) = Normal(x | mean, exp(log_std) ** 2).
+            Note that we consider the case of diagonal covariance matrix.
+        """
+        # ====
+        mean = mean.float()
+        std  = torch.exp(log_std).float()
+
+        prob = Independent(torch.distributions.Normal(mean, std), reinterpreted_batch_ndims = 1)
+        nnl = -prob.log_prob(x)
+        return nnl

@@ -1,4 +1,4 @@
-from rdas.methods.VAE.model import VAE, Encoder, Decoder
+from rdas.evaluation.VAE.model import VAE, Encoder, Decoder
 from rdas.datasets.linear import get_dataset
 from collections import defaultdict
 import torch
@@ -9,15 +9,12 @@ import numpy as np
 from torch.utils.data import TensorDataset, DataLoader
 
 
-BATCH_SIZE = 300 # any adequate value
-EPOCHS = 50   # < 16
-LR = 0.3*1e-3         # < 1e-3
-BETA = 1       # 0.1 < _ < 10
+BATCH_SIZE = 300 
+EPOCHS = 50   
+LR = 0.3*1e-3         
+BETA = 1      
 PATH_DATASET = "/Users/melnikov/Desktop/study/Skoltech/NLA/proj/rdas/datasets/samples/line_3d.txt" # Just example
 TEST_SIZE = 0.2
-
-# DIM_OF_SPACE = 3
-# DIM_OF_MANIFOLD = 1
 
 NH = 10
 D_LATENT = 2  # dimension of latent space 
