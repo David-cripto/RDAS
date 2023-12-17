@@ -1,4 +1,4 @@
-from rdas.evaluation.VAE.model import VAE, Encoder, Decoder
+from rdas.evaluation.vae import VAE, Encoder, Decoder
 from rdas.datasets.linear import get_dataset
 from collections import defaultdict
 import torch
@@ -82,8 +82,6 @@ def train_model(
             train_losses[k].extend(train_loss[k])
             test_losses[k].append(test_loss[k])
         print(f"{test_losses['elbo_loss']=}")
-        # print(f"{test_losses['kl_loss']=}")
-        # print(f"{test_losses['recon_loss']=}")
         torch.save({
             'epoch': epoch,
             'model_state_dict': model.state_dict(),
