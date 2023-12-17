@@ -1,9 +1,9 @@
 import numpy as np
 
 class SphericalDataset():
-    def __init__(self, dim_n, dim_m, seed=42):
-        self.n = dim_n
-        self.m = dim_m
+    def __init__(self, dim_of_space, dim_of_manifold, seed=42):
+        self.n = dim_of_space
+        self.m = dim_of_manifold
         self.seed = seed
         np.random.seed(seed)
 
