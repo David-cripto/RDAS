@@ -12,10 +12,10 @@ TRANSFORM = transforms.Compose(
 )
 
 class ClassMnist(Dataset):
-    def __init__(self, img_dir, label = 0):
+    def __init__(self, img_dir, train=True, label = 0):
         super().__init__()
         self.train_dataset = torchvision.datasets.MNIST(
-            img_dir, download=True, train=True
+            img_dir, download=True, train=train
         )
         self.label = label
         self.dataset = self.zero_filter()
