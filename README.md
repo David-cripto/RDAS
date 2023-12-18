@@ -25,3 +25,8 @@ $$
 - Low-dimensional vectors are estimated as $x_{\mathrm{AS}} = U_r^*x$.
 
 For further details, look into the book „Active Subspaces: Emerging Ideas in Dimension Reduction for Parameter Studies“ (2015) by Paul Constantine.
+
+## Density distribution gradients obtained from diffusion models. 
+
+![Alt Text](https://github.com/David-cripto/RDAS/blob/VAE/pict/grad.gif)
+
