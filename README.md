@@ -14,7 +14,7 @@ In order to identify $n$ the method of active subspaces is used, which is extend
 - Compute the SVD of the matrix:
 - 
 $$
-G := \frac{1}{\sqrt{m}}\[\nabla f(x_1) \space \nabla f(x_2) \ldots \space \nabla f(x_m)\] \approx U \Sigma V^*
+G := \frac{1}{\sqrt{m}}(\nabla f(x_1) \space \nabla f(x_2) \ldots \space \nabla f(x_m)) \approx U \Sigma V^*
 
 $$
 - Estimate the rank of $G\approx U_r \Sigma_rV^*_r$. The rank $r$ of the matrix G is the dimensionality of the active subspace. 
