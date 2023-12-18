@@ -12,8 +12,10 @@ In order to identify $n$ the method of active subspaces is used, which is extend
 - Draw samples $\{x_i\}^m_{i=1}$ from $X$ (according to some prior probability density function).
 - For each $x_i$ compute $\nabla f(x_i)$.
 - Compute the SVD of the matrix:
+- 
 $$
-G := \frac{1}{\sqrt{m}}[\nabla f(x_1) \space \nabla f(x_2) \ldots \space \nabla f(x_m)] \approx U \Sigma V^*
+G := \frac{1}{\sqrt{m}}\[\nabla f(x_1) \space \nabla f(x_2) \ldots \space \nabla f(x_m)\] \approx U \Sigma V^*
+
 $$
 - Estimate the rank of $G\approx U_r \Sigma_rV^*_r$. The rank $r$ of the matrix G is the dimensionality of the active subspace. 
 - Low-dimensional vectors are estimated as $x_{\mathrm{AS}} = U_r^*x$.
