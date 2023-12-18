@@ -30,5 +30,5 @@ For further details, look into the book „Active Subspaces: Emerging Ideas in D
 
 ![Alt Text](https://github.com/David-cripto/RDAS/blob/VAE/pict/grad.gif)
 
-## Results for MNIST zeros
-![Alt Text](https://github.com/David-cripto/RDAS/blob/VAE/pict/zeros.gif)
+<!-- ## Results for MNIST zeros
+![Alt Text](https://github.com/David-cripto/RDAS/blob/VAE/pict/zeros.gif) -->
