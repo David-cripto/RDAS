@@ -7,12 +7,15 @@ Our project provides a method to estimate such n. We plan to create a new evalua
 
 In order to identify $n$ the method of active subspaces is used, which is extended by applying deterministic kernels and diffusion neural networks. The correctness of the proposed algorithm will be tested on MNIST dataset. Also we plan to create a synthetic multi-dimensional datasets with points, generated in order to test performance of our algorithm and visualize it.
 
+## Concept
+
+![alt text](https://github.com/David-cripto/RDAS/blob/VAE/pict/concept.png)
+
 ## Active Subspaces approach.
 - Choose $m$, the number of estimations. This hyperparameter stands for the number of Monte Carlo estimations. The larger $m$, the more accurate the result is.
 - Draw samples $\{x_i\}^m_{i=1}$ from $X$ (according to some prior probability density function).
 - For each $x_i$ compute $\nabla f(x_i)$.
 - Compute the SVD of the matrix:
-- 
 $$
 G := \frac{1}{\sqrt{m}}(\nabla f(x_1) \space \nabla f(x_2) \ldots \space \nabla f(x_m)) \approx U \Sigma V^*
 
