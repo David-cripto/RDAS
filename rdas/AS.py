@@ -8,7 +8,7 @@ def check_input(X):
     N, d = X.shape
     return X, N, d
 
-def get_n(S, eps=1e-8):
+def get_n(S):
     ediff = np.fabs(np.diff(S.reshape((S.size,))))
     n = np.argmax(ediff)+1
 
@@ -20,7 +20,7 @@ def compute_AS(X: np.ndarray, kde_pdf) -> np.ndarray:
 
     X, N, d = check_input(X)
 
-    G = 1/np.sqrt(N) * np.column_stack([kde_pdf.grad(x) for x in dataset])
+    G = 1/np.sqrt(N) * np.column_stack([kde_pdf.grad(x) for x in X])
     U, S, Vh = np.linalg.svd(G)
     
     return get_n(S)
